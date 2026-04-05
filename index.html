@@ -23,41 +23,57 @@
         }
 
         h1 {
-            font-family: 'Fredoka One', cursive; font-size: 3rem;
+            font-family: 'Fredoka One', cursive; 
+            font-size: clamp(2rem, 6vw, 3rem); /* Tamaño responsivo */
             color: #fff; text-shadow: 3px 3px 0 #0D47A1;
-            margin: 20px 0 10px;
+            margin: 20px 0 5px;
         }
+        p { margin-top: 0; margin-bottom: 10px; }
 
         /* Música */
         #music-btn {
-            position: fixed; top: 20px; right: 20px;
+            position: fixed; top: 10px; right: 10px;
             background: #fff; border: 3px solid #1565C0; border-radius: 50%;
-            width: 50px; height: 50px; cursor: pointer; z-index: 999;
-            font-size: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 45px; height: 45px; cursor: pointer; z-index: 999;
+            font-size: 1.2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: 0.2s;
         }
         #music-btn:hover { transform: scale(1.1); background: #E3F2FD; }
         #music-btn.playing { background: #BBDEFB; border-color: #FF7043; }
 
-        /* Huevos */
+        /* CONTENEDOR DE HUEVOS - AJUSTADO PARA MÓVIL */
         .egg-container {
-            display: flex; flex-wrap: wrap; justify-content: center;
-            gap: 20px; padding: 20px; max-width: 800px; margin: 0 auto;
+            display: flex;
+            flex-wrap: nowrap; /* IMPORTANTE: Obliga a estar en una sola línea */
+            justify-content: center;
+            gap: 8px; /* Espacio reducido entre botones */
+            padding: 0 10px; /* Espacio a los lados */
+            margin-bottom: 15px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .egg-btn {
             background: rgba(255,255,255,0.95);
-            border: 5px solid #333;
-            border-radius: 20px; padding: 15px; width: 180px;
+            border: 4px solid #333;
+            border-radius: 15px; 
+            padding: 10px 5px; /* Padding reducido */
+            width: 33.33%; /* Cada botón ocupa un tercio */
+            min-width: 90px; /* Ancho mínimo para que se vea bien */
             cursor: pointer; transition: all 0.2s;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .egg-btn:hover:not(:disabled) { transform: translateY(-10px) scale(1.05); }
+
+        .egg-btn:hover:not(:disabled) { transform: translateY(-5px) scale(1.02); }
         .egg-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: scale(0.95); }
 
-        .egg-icon { font-size: 3rem; display: block; margin-bottom: 5px; }
-        .egg-name { font-family: 'Fredoka One'; font-size: 1.3rem; color: #333; }
-        .egg-time { font-size: 0.9rem; color: #666; font-weight: bold; display: block; margin-top: 5px; }
+        .egg-icon { font-size: clamp(2rem, 8vw, 3rem); display: block; margin-bottom: 2px; }
+        .egg-name { font-family: 'Fredoka One'; font-size: clamp(0.9rem, 3vw, 1.1rem); color: #333; line-height: 1.1; }
+        .egg-time { font-size: clamp(0.7rem, 2.5vw, 0.8rem); color: #666; font-weight: bold; display: block; margin-top: 4px; }
 
         .egg-a { border-color: #42A5F5; background: #E3F2FD; }
         .egg-b { border-color: #FF7043; background: #FBE9E7; }
@@ -66,9 +82,7 @@
         .confeti-btn {
             background: linear-gradient(45deg, #FF4081, #FF80AB);
             color: white;
-            border: 3px solid white;
-            font-family: 'Fredoka One';
-            font-size: 1.2rem;
+            border: 4px solid white;
         }
         .confeti-btn:hover { transform: translateY(-5px) rotate(2deg); }
 
@@ -80,8 +94,8 @@
             color: white;
         }
         #modal-overlay.active { display: flex; }
-        .hatching-egg { font-size: 10rem; animation: shake 0.3s infinite; }
-        .timer-text { font-family: 'Fredoka One'; font-size: 6rem; margin: 10px 0; text-shadow: 0 0 20px #fff; }
+        .hatching-egg { font-size: 8rem; animation: shake 0.3s infinite; }
+        .timer-text { font-family: 'Fredoka One'; font-size: 5rem; margin: 10px 0; text-shadow: 0 0 20px #fff; }
         @keyframes shake {
             0%, 100% { transform: translateX(0) rotate(0); }
             25% { transform: translateX(-20px) rotate(-10deg); }
@@ -90,10 +104,10 @@
 
         /* JARDÍN */
         .garden-area {
-            position: relative; width: 95%; max-width: 800px; height: 450px;
-            margin: 20px auto 40px; 
+            position: relative; width: 95%; max-width: 800px; height: 60vh; /* Altura responsiva */
+            margin: 0 auto 20px; 
             background: #66BB6A;
-            border: 10px solid #5D4037; border-radius: 20px;
+            border: 8px solid #5D4037; border-radius: 20px;
             overflow: hidden; 
             box-shadow: inset 0 0 50px rgba(0,0,0,0.2);
         }
@@ -107,7 +121,7 @@
             z-index: 0; 
         }
 
-        /* IMPORTANTE: Contenedor ocupa TODO el espacio verde */
+        /* Contenedor ocupa TODO el espacio verde */
         #garden-container {
             position: absolute;
             top: 0; left: 0;
@@ -118,7 +132,7 @@
         /* PERSONAJES */
         .character {
             position: absolute;
-            width: 80px; height: 80px;
+            width: 60px; height: 60px; /* Un poco más pequeños en móvil */
             cursor: pointer; z-index: 10; 
             transition: left 2.5s ease-in-out, top 2.5s ease-in-out; 
             animation: float 1.5s ease-in-out infinite;
@@ -133,7 +147,7 @@
         }
 
         .character img {
-            width: 70px; height: 70px;
+            width: 50px; height: 50px;
             object-fit: contain;
             pointer-events: none;
         }
@@ -150,13 +164,20 @@
         }
 
         .character::after {
-            content: attr(data-name); position: absolute; bottom: -25px;
+            content: attr(data-name); position: absolute; bottom: -20px;
             left: 50%; transform: translateX(-50%); background: white;
-            padding: 3px 10px; border-radius: 10px; font-family: 'Fredoka One';
-            font-size: 12px; white-space: nowrap; opacity: 0;
-            transition: opacity 0.2s; border: 2px solid #333; color: #333;
+            padding: 2px 6px; border-radius: 8px; font-family: 'Fredoka One';
+            font-size: 10px; white-space: nowrap; opacity: 0;
+            transition: opacity 0.2s; border: 1px solid #333; color: #333;
         }
         .character:hover::after { opacity: 1; }
+
+        /* Ajuste tamaño personajes en PC */
+        @media (min-width: 600px) {
+            .character { width: 80px; height: 80px; }
+            .character img { width: 70px; height: 70px; }
+            .garden-area { height: 450px; }
+        }
 
         /* CONFETI */
         .confetti-piece {
@@ -192,7 +213,6 @@
             <span class="egg-time">⏱ 5s</span>
         </button>
 
-        <!-- NUEVO BOTÓN CONFETI -->
         <button class="egg-btn confeti-btn" onclick="throwConfetti()">
             <span class="egg-icon">🎉</span>
             <span class="egg-name">Fiesta!</span>
@@ -309,24 +329,25 @@
 
             charDiv.appendChild(img);
 
-            const charSize = 80;
-            
-            // Medimos el contenedor que ahora sí tiene tamaño completo
+            // Obtener tamaño actual del personaje (60px en móvil, 80px en PC)
+            // Forzamos un reflujo inicial para medir bien
+            container.appendChild(charDiv);
+            const charSize = charDiv.offsetWidth; 
+            container.removeChild(charDiv); // Lo quitamos para ponerlo luego
+
             const areaWidth = container.clientWidth;
             const areaHeight = container.clientHeight;
 
-            // Cálculo correcto para usar TODO el espacio
             const maxX = Math.max(0, areaWidth - charSize);
             const maxY = Math.max(0, areaHeight - charSize);
 
-            // Posición aleatoria
             const startX = Math.floor(Math.random() * maxX);
             const startY = Math.floor(Math.random() * maxY);
 
             charDiv.style.left = startX + 'px';
             charDiv.style.top = startY + 'px';
 
-            container.appendChild(charDiv);
+            container.appendChild(charDiv); // Lo volvemos a poner
 
             setTimeout(() => {
                 charDiv.classList.remove('spawning');
@@ -361,17 +382,16 @@
         // --- FUNCIÓN CONFETI ---
         function throwConfetti() {
             const colors = ['#FF4081', '#FF80AB', '#42A5F5', '#FFD700', '#66BB6A', '#AB47BC'];
-            const total = 100; // Cantidad de piezas
+            const total = 100;
 
             for(let i=0; i<total; i++) {
                 const conf = document.createElement('div');
                 conf.className = 'confetti-piece';
                 conf.style.left = Math.random() * 100 + 'vw';
                 conf.style.background = colors[Math.floor(Math.random() * colors.length)];
-                conf.style.animationDuration = (Math.random() * 2 + 2) + 's'; // Entre 2 y 4 segundos
+                conf.style.animationDuration = (Math.random() * 2 + 2) + 's';
                 conf.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
                 
-                // Formas variadas
                 if(Math.random() > 0.5) {
                     conf.style.borderRadius = '50%';
                 } else {
@@ -380,8 +400,6 @@
                 }
 
                 document.body.appendChild(conf);
-
-                // Eliminar después de la animación
                 setTimeout(() => conf.remove(), 4000);
             }
         }
