@@ -1,11 +1,12 @@
 // --- BASE DE DATOS CON NOMBRES EXACTOS DE TUS ARCHIVOS ---
-// He borrado los personajes que no tenían imagen en tu captura (Bandit, Chilli)
-// para evitar errores.
+// He eliminado los personajes que NO aparecen en tu captura (Bandit, Chilli).
+// He corregido los nombres exactos (ej: snakers, mackenz).
+// Las rutas son directas (sin carpeta "Fotos") porque tus archivos están en la raíz.
 
 const characterDB = {
     bluey: [
         { name: 'Bluey', size: 'kid', url: 'bluey-bluey.png' },
-        { name: 'Bingo', size: 'kid', url: 'bluey-bingoesss.png' } // Nombre corregido según tu captura
+        { name: 'Bingo', size: 'kid', url: 'bluey-bingoesss.png' } 
     ],
     familia: [
         { name: 'Rad', size: 'dad', url: 'bluey-rad.png' },
@@ -15,18 +16,17 @@ const characterDB = {
     amigos: [
         { name: 'Coco', size: 'kid', url: 'bluey-coco.png' },
         { name: 'Indy', size: 'kid', url: 'bluey-indy.png' },
-        { name: 'Mackenzie', size: 'kid', url: 'bluey-mackenz.png' }, // Nombre corregido
+        { name: 'Mackenzie', size: 'kid', url: 'bluey-mackenz.png' }, // Corregido: mackenz
         { name: 'Rusty', size: 'kid', url: 'bluey-rusty.png' },
-        { name: 'Snickers', size: 'kid', url: 'bluey-snakers.png' }, // Nombre corregido
+        { name: 'Snickers', size: 'kid', url: 'bluey-snakers.png' }, // Corregido: snakers
         { name: 'Winton', size: 'kid', url: 'bluey-winton.png' }
     ],
     bebes: [
         { name: 'Socks', size: 'baby', url: 'bluey-socks.png' },
-        { name: 'Muffin', size: 'baby', url: 'muffins.png' } // Nombre corregido
+        { name: 'Muffin', size: 'baby', url: 'muffins.png' }
     ],
     mythic: [
-        // Usamos una imagen extra que vi en tu lista para los especiales
-        { name: 'Bluey Feliz', size: 'kid', url: 'bluey-bluey-dance.png' } 
+        { name: 'Bluey Bailando', size: 'kid', url: 'bluey-bluey-dance.png' } // Corregido: sin carpeta Fotos
     ]
 };
 
