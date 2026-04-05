@@ -1,39 +1,27 @@
-// --- BASE DE DATOS CON NOMBRES EXACTOS DE TUS ARCHIVOS ---
-// He eliminado los personajes que NO aparecen en tu captura (Bandit, Chilli).
-// He corregido los nombres exactos (ej: snakers, mackenz).
-// Las rutas son directas (sin carpeta "Fotos") porque tus archivos están en la raíz.
+// --- PRUEBA: SOLO CARGA LA IMAGEN 1.png ---
 
 const characterDB = {
     bluey: [
-        { name: 'Bluey', size: 'kid', url: 'bluey-bluey.png' },
-        { name: 'Bingo', size: 'kid', url: 'bluey-bingoesss.png' } 
+        { name: 'Prueba Imagen', size: 'dad', url: '1.png' }
     ],
     familia: [
-        { name: 'Rad', size: 'dad', url: 'bluey-rad.png' },
-        { name: 'Stripe', size: 'dad', url: 'bluey-stripe.png' },
-        { name: 'Trixie', size: 'mom', url: 'bluey-trixie.png' }
+        { name: 'Prueba Imagen', size: 'dad', url: '1.png' }
     ],
     amigos: [
-        { name: 'Coco', size: 'kid', url: 'bluey-coco.png' },
-        { name: 'Indy', size: 'kid', url: 'bluey-indy.png' },
-        { name: 'Mackenzie', size: 'kid', url: 'bluey-mackenz.png' }, // Corregido: mackenz
-        { name: 'Rusty', size: 'kid', url: 'bluey-rusty.png' },
-        { name: 'Snickers', size: 'kid', url: 'bluey-snakers.png' }, // Corregido: snakers
-        { name: 'Winton', size: 'kid', url: 'bluey-winton.png' }
+        { name: 'Prueba Imagen', size: 'dad', url: '1.png' }
     ],
     bebes: [
-        { name: 'Socks', size: 'baby', url: 'bluey-socks.png' },
-        { name: 'Muffin', size: 'baby', url: 'muffins.png' }
+        { name: 'Prueba Imagen', size: 'dad', url: '1.png' }
     ],
     mythic: [
-        { name: 'Bluey Bailando', size: 'kid', url: 'bluey-bluey-dance.png' } // Corregido: sin carpeta Fotos
+        { name: 'Prueba Imagen', size: 'dad', url: '1.png' }
     ]
 };
 
-const waitTimes = { bluey: 8, familia: 12, amigos: 15, bebes: 18, mythic: 25 };
+const waitTimes = { bluey: 2, familia: 2, amigos: 2, bebes: 2, mythic: 2 }; // Tiempos reducidos a 2 seg para prueba
 let isHatching = false;
 
-// --- SISTEMA DE AUDIO ---
+// --- SISTEMA DE AUDIO (Sin cambios) ---
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 let isPlaying = false;
@@ -92,7 +80,7 @@ function startHatching(type) {
 
 function hatchCharacter(type) {
     const pool = characterDB[type];
-    const randomChar = pool[Math.floor(Math.random() * pool.length)];
+    const randomChar = pool[0]; // Siempre toma el primero (nuestra prueba)
     
     document.getElementById('modal-overlay').classList.remove('active');
     addToGarden(randomChar);
@@ -105,7 +93,12 @@ function addToGarden(charData) {
     const container = document.getElementById('garden-container');
     const img = document.createElement('img');
     
+    // Cargamos la imagen
     img.src = charData.url;
+    
+    // Mensaje en consola para ver si la ruta es correcta
+    console.log("Intentando cargar imagen:", charData.url);
+
     img.className = 'character spawning';
     img.setAttribute('data-name', charData.name);
     
