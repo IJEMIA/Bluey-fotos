@@ -1,41 +1,32 @@
-
-// --- BASE DE DATOS CON RUTAS LOCALES ---
-// Asegúrate de que los archivos en la carpeta "Fotos" coincidan con estos nombres.
-// Ejemplo: Si tu archivo es "bluey - bluey.png", renómbralo a "bluey.png" o cambia el nombre aquí.
+// --- BASE DE DATOS CON NOMBRES EXACTOS DE TUS ARCHIVOS ---
+// He borrado los personajes que no tenían imagen en tu captura (Bandit, Chilli)
+// para evitar errores.
 
 const characterDB = {
     bluey: [
-        { name: 'Bluey', size: 'kid', url: 'Fotos/bluey.png' },
-        { name: 'Bingo', size: 'kid', url: 'Fotos/bingo.png' }
+        { name: 'Bluey', size: 'kid', url: 'bluey-bluey.png' },
+        { name: 'Bingo', size: 'kid', url: 'bluey-bingoesss.png' } // Nombre corregido según tu captura
     ],
     familia: [
-        { name: 'Bandit', size: 'dad', url: 'Fotos/bandit.png' },
-        { name: 'Chilli', size: 'mom', url: 'Fotos/chilli.png' },
-        { name: 'Rad', size: 'dad', url: 'Fotos/rad.png' },
-        { name: 'Frisky', size: 'mom', url: 'Fotos/frisky.png' },
-        { name: 'Stripe', size: 'dad', url: 'Fotos/stripe.png' },
-        { name: 'Trixie', size: 'mom', url: 'Fotos/trixie.png' }
+        { name: 'Rad', size: 'dad', url: 'bluey-rad.png' },
+        { name: 'Stripe', size: 'dad', url: 'bluey-stripe.png' },
+        { name: 'Trixie', size: 'mom', url: 'bluey-trixie.png' }
     ],
     amigos: [
-        { name: 'Coco', size: 'kid', url: 'Fotos/cocos.png' }, // Nota: Usé el nombre de tu captura
-        { name: 'Snickers', size: 'kid', url: 'Fotos/snickers.png' },
-        { name: 'Honey', size: 'kid', url: 'Fotos/honey.png' },
-        { name: 'Mackenzie', size: 'kid', url: 'Fotos/mackenzie.png' },
-        { name: 'Rusty', size: 'kid', url: 'Fotos/rusty.png' },
-        { name: 'Indy', size: 'kid', url: 'Fotos/indy.png' },
-        { name: 'Chloe', size: 'kid', url: 'Fotos/chloe.png' },
-        { name: 'Lucky', size: 'kid', url: 'Fotos/lucky.png' }
+        { name: 'Coco', size: 'kid', url: 'bluey-coco.png' },
+        { name: 'Indy', size: 'kid', url: 'bluey-indy.png' },
+        { name: 'Mackenzie', size: 'kid', url: 'bluey-mackenz.png' }, // Nombre corregido
+        { name: 'Rusty', size: 'kid', url: 'bluey-rusty.png' },
+        { name: 'Snickers', size: 'kid', url: 'bluey-snakers.png' }, // Nombre corregido
+        { name: 'Winton', size: 'kid', url: 'bluey-winton.png' }
     ],
     bebes: [
-        { name: 'Socks', size: 'baby', url: 'Fotos/socks.png' },
-        { name: 'Muffin', size: 'baby', url: 'Fotos/muffins.png' }, // Nota: Usé el nombre de tu captura
-        { name: 'Bebé Bingo', size: 'baby', url: 'Fotos/baby_bingo.png' },
-        { name: 'Bebé Bluey', size: 'baby', url: 'Fotos/baby_bluey.png' }
+        { name: 'Socks', size: 'baby', url: 'bluey-socks.png' },
+        { name: 'Muffin', size: 'baby', url: 'muffins.png' } // Nombre corregido
     ],
     mythic: [
-        { name: 'Calipso', size: 'kid', url: 'Fotos/calypso.png' },
-        { name: 'Jean-Luc', size: 'kid', url: 'Fotos/jean_luc.png' },
-        { name: 'Grogo', size: 'baby', url: 'Fotos/grogo.png' }
+        // Usamos una imagen extra que vi en tu lista para los especiales
+        { name: 'Bluey Feliz', size: 'kid', url: 'bluey-bluey-dance.png' } 
     ]
 };
 
@@ -50,14 +41,10 @@ let isPlaying = false;
 function toggleMusic() {
     const btn = document.getElementById('music-btn');
     if(isPlaying) {
-        isPlaying = false;
-        btn.innerText = '🔇';
-        btn.classList.remove('playing');
+        isPlaying = false; btn.innerText = '🔇'; btn.classList.remove('playing');
     } else {
         if(!audioCtx) audioCtx = new AudioContext();
-        isPlaying = true;
-        btn.innerText = '🔊';
-        btn.classList.add('playing');
+        isPlaying = true; btn.innerText = '🔊'; btn.classList.add('playing');
         playMelody();
     }
 }
@@ -69,8 +56,7 @@ function playMelody() {
     notes.forEach((f, i) => {
         const osc = audioCtx.createOscillator();
         const g = audioCtx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.value = f;
+        osc.type = 'triangle'; osc.frequency.value = f;
         g.gain.setValueAtTime(0.1, now + i*0.25);
         g.gain.linearRampToValueAtTime(0, now + i*0.25 + 0.2);
         osc.connect(g); g.connect(audioCtx.destination);
@@ -123,12 +109,10 @@ function addToGarden(charData) {
     img.className = 'character spawning';
     img.setAttribute('data-name', charData.name);
     
-    // Aplicar clase de tamaño
     if(charData.size === 'dad') img.classList.add('char-dad');
     if(charData.size === 'mom') img.classList.add('char-mom');
     if(charData.size === 'baby') img.classList.add('char-baby');
 
-    // Posición inicial
     const rect = container.getBoundingClientRect();
     const w = rect.width - 100;
     const h = rect.height - 100;
