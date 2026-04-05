@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bluey: Jardín Seguro</title>
+    <title>Bluey: Área Completa</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600&display=swap" rel="stylesheet">
     <style>
+        /* Reinicio y Configuración General */
+        * { box-sizing: border-box; } /* Hace que los bordes no afecten el tamaño interno */
+
         :root {
             --sky-top: #4FC3F7;
             --sky-bottom: #B3E5FC;
@@ -26,7 +29,7 @@
             margin: 20px 0 10px;
         }
 
-        /* Botón Música */
+        /* Música */
         #music-btn {
             position: fixed; top: 20px; right: 20px;
             background: #fff; border: 3px solid #1565C0; border-radius: 50%;
@@ -37,7 +40,7 @@
         #music-btn:hover { transform: scale(1.1); background: #E3F2FD; }
         #music-btn.playing { background: #BBDEFB; border-color: #FF7043; }
 
-        /* Contenedor de Huevos */
+        /* Huevos */
         .egg-container {
             display: flex; flex-wrap: wrap; justify-content: center;
             gap: 30px; padding: 20px; max-width: 600px; margin: 0 auto;
@@ -50,7 +53,6 @@
             cursor: pointer; transition: all 0.2s;
             box-shadow: 0 8px 15px rgba(0,0,0,0.2);
         }
-
         .egg-btn:hover:not(:disabled) { transform: translateY(-10px) scale(1.05); }
         .egg-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: scale(0.95); }
 
@@ -58,7 +60,6 @@
         .egg-name { font-family: 'Fredoka One'; font-size: 1.5rem; color: #333; }
         .egg-time { font-size: 1rem; color: #666; font-weight: bold; display: block; margin-top: 5px; }
 
-        /* Colores de huevos */
         .egg-a { border-color: #42A5F5; background: #E3F2FD; }
         .egg-b { border-color: #FF7043; background: #FBE9E7; }
 
@@ -78,39 +79,41 @@
             75% { transform: translateX(20px) rotate(10deg); }
         }
 
-        /* Jardín */
+        /* JARDÍN */
         .garden-area {
             position: relative; width: 95%; max-width: 800px; height: 450px;
-            margin: 20px auto 40px; background: #66BB6A; /* Verde oscuro para contraste */
+            margin: 20px auto 40px; 
+            background: #66BB6A; /* Verde Jardín */
             border: 10px solid #5D4037; border-radius: 20px;
-            overflow: hidden; /* CLAVE: Nada sale de aquí */
-            box-shadow: inset 0 0 80px rgba(0,0,0,0.3);
+            overflow: hidden; 
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.2);
         }
         
-        /* Césped visual */
+        /* Césped visual (pura decoración) */
         .garden-bg {
             position: absolute; width: 100%; height: 100%;
             background-image: radial-gradient(#81C784 20%, transparent 20%), radial-gradient(#81C784 20%, transparent 20%);
             background-size: 30px 30px; background-position: 0 0, 15px 15px;
             opacity: 0.5; pointer-events: none;
+            z-index: 0; /* Detrás de los personajes */
         }
 
         /* PERSONAJES */
         .character {
             position: absolute;
             width: 80px; height: 80px;
-            cursor: pointer; z-index: 10;
-            transition: left 3s ease-in-out, top 3s ease-in-out;
+            cursor: pointer; z-index: 10; /* Encima del césped */
+            transition: left 2.5s ease-in-out, top 2.5s ease-in-out; /* Movimiento suave */
             animation: float 1.5s ease-in-out infinite;
             
-            /* Fondo Blanco para que se vean bien */
-            background: rgba(255, 255, 255, 0.9);
+            /* Fondo y Sombra */
+            background: rgba(255, 255, 255, 0.85);
             border-radius: 50%;
             border: 3px solid white;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
         .character img {
@@ -145,19 +148,19 @@
     <button id="music-btn" onclick="toggleMusic()">🔇</button>
 
     <h1>Jardín Bluey</h1>
-    <p>Elige un huevo (Imágenes 1-28 y 29-56)</p>
+    <p>Personajes en toda el área verde</p>
 
     <!-- Solo 2 Huevos -->
     <div class="egg-container">
         <button class="egg-btn egg-a" onclick="startHatching('set_a')">
             <span class="egg-icon">🥚</span>
-            <span class="egg-name">Grupo A</span>
+            <span class="egg-name">Grupo A (1-28)</span>
             <span class="egg-time">⏱ 5s</span>
         </button>
         
         <button class="egg-btn egg-b" onclick="startHatching('set_b')">
             <span class="egg-icon">🥚</span>
-            <span class="egg-name">Grupo B</span>
+            <span class="egg-name">Grupo B (29-56)</span>
             <span class="egg-time">⏱ 5s</span>
         </button>
     </div>
@@ -170,19 +173,15 @@
     </div>
 
     <!-- Jardín -->
-    <div class="garden-area">
+    <div class="garden-area" id="garden-area">
         <div class="garden-bg"></div>
         <div id="garden-container"></div>
     </div>
 
     <script>
-        // --- CONFIGURACIÓN SIMPLE ---
-        // Huevo A: Imágenes de la 1 a la 28
-        // Huevo B: Imágenes de la 29 a la 56
-        
         let isHatching = false;
 
-        // --- AUDIO (Sin cambios) ---
+        // --- AUDIO ---
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
         let isPlaying = false;
@@ -226,7 +225,7 @@
             const timer = document.getElementById('countdown-display');
             overlay.classList.add('active');
 
-            let t = 5; // Tiempo reducido a 5 segundos
+            let t = 5;
             timer.innerText = t;
 
             const interval = setInterval(() => {
@@ -241,17 +240,15 @@
 
         function hatchCharacter(type) {
             let num;
-            // Asignar rango de números según el huevo
             if (type === 'set_a') {
-                num = Math.floor(Math.random() * 28) + 1; // Números 1 al 28
+                num = Math.floor(Math.random() * 28) + 1; 
             } else {
-                num = Math.floor(Math.random() * 28) + 29; // Números 29 al 56
+                num = Math.floor(Math.random() * 28) + 29; 
             }
             
             const charData = {
                 name: 'Personaje ' + num,
-                url: num + '.png', // Ej: 5.png, 40.png
-                size: 'kid'
+                url: num + '.png'
             };
 
             document.getElementById('modal-overlay').classList.remove('active');
@@ -271,26 +268,28 @@
             const img = document.createElement('img');
             img.src = charData.url;
             
-            // Manejo de error: si la imagen no carga, la reintentamos con otra número
+            // Si la imagen falla, usa 1.png
             img.onerror = function() {
-                console.log("No encontré: " + charData.url);
-                this.src = "1.png"; // Si falla, ponemos la 1.png que sabemos que funciona
-                charDiv.setAttribute('data-name', 'Bandit (Backup)');
+                this.src = "1.png";
+                charDiv.setAttribute('data-name', 'Backup');
             };
 
             charDiv.appendChild(img);
 
-            // Tamaños fijos para cálculo
-            const charSize = 80; // Ancho y alto del personaje
-            
-            // Obtener tamaño REAL del jardín
-            const rect = container.getBoundingClientRect();
-            const maxX = rect.width - charSize;
-            const maxY = rect.height - charSize;
+            // --- CORRECCIÓN DE ÁREA VERDE ---
+            const charSize = 80; // Tamaño fijo del personaje
 
-            // Posición aleatoria DENTRO de los límites
-            const startX = Math.max(0, Math.floor(Math.random() * maxX));
-            const startY = Math.max(0, Math.floor(Math.random() * maxY));
+            // Usamos clientWidth/clientHeight para medir SOLO el interior verde
+            const areaWidth = container.clientWidth;
+            const areaHeight = container.clientHeight;
+
+            // Calculamos espacio máximo disponible (asegurando que no sea negativo)
+            const maxX = Math.max(0, areaWidth - charSize);
+            const maxY = Math.max(0, areaHeight - charSize);
+
+            // Posición aleatoria que cubre TODO el rango (0 hasta el final)
+            const startX = Math.floor(Math.random() * maxX);
+            const startY = Math.floor(Math.random() * maxY);
 
             charDiv.style.left = startX + 'px';
             charDiv.style.top = startY + 'px';
@@ -307,26 +306,30 @@
             if(!el.parentNode) return;
 
             const container = document.getElementById('garden-container');
-            const rect = container.getBoundingClientRect();
             
+            // Medimos de nuevo el interior verde
+            const areaWidth = container.clientWidth;
+            const areaHeight = container.clientHeight;
+
             // Límites estrictos
-            const maxX = rect.width - size;
-            const maxY = rect.height - size;
+            const maxX = Math.max(0, areaWidth - size);
+            const maxY = Math.max(0, areaHeight - size);
 
             // Nueva posición aleatoria
-            const newX = Math.max(0, Math.floor(Math.random() * maxX));
-            const newY = Math.max(0, Math.floor(Math.random() * maxY));
+            const newX = Math.floor(Math.random() * maxX);
+            const newY = Math.floor(Math.random() * maxY);
 
             // Lógica de giro
             const currentX = parseFloat(el.style.left);
+            // Voltear según dirección
             if(newX > currentX) el.style.transform = 'scaleX(1)';
             else el.style.transform = 'scaleX(-1)';
 
             el.style.left = newX + 'px';
             el.style.top = newY + 'px';
 
-            // Repetir movimiento
-            setTimeout(() => moveCharacter(el, size), 3000 + Math.random()*2000);
+            // Repetir movimiento cada 2-4 segundos
+            setTimeout(() => moveCharacter(el, size), 2000 + Math.random()*2000);
         }
     </script>
 </body>
