@@ -3,45 +3,383 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueba Bluey</title>
+    <title>Bluey: Jardín Completo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; text-align: center; background: #81C784; padding: 20px; }
-        button { padding: 20px; font-size: 20px; cursor: pointer; background: #FFD700; border: none; border-radius: 10px; }
-        #garden { position: relative; width: 100%; height: 400px; background: white; margin-top: 20px; border: 2px dashed #333; }
-        img { width: 100px; position: absolute; }
+        /* --- ESTILOS CSS --- */
+        :root {
+            --sky-top: #4FC3F7;
+            --sky-bottom: #B3E5FC;
+            --grass: #8BC34A;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, var(--sky-top), var(--sky-bottom) 60%, var(--grass));
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+            text-align: center;
+            color: #333;
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 3px 3px 0 #0D47A1;
+            margin: 20px 0 10px;
+        }
+
+        /* Botón Música */
+        #music-btn {
+            position: fixed; top: 20px; right: 20px;
+            background: #fff; border: 3px solid #1565C0; border-radius: 50%;
+            width: 50px; height: 50px; cursor: pointer; z-index: 999;
+            font-size: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: 0.2s;
+        }
+        #music-btn:hover { transform: scale(1.1); background: #E3F2FD; }
+        #music-btn.playing { background: #BBDEFB; border-color: #FF7043; }
+
+        /* Huevos */
+        .egg-container {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 15px; padding: 20px; max-width: 800px; margin: 0 auto;
+        }
+
+        .egg-btn {
+            background: rgba(255,255,255,0.9); border: 4px solid #888;
+            border-radius: 20px; padding: 15px; width: 140px;
+            cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .egg-btn:hover:not(:disabled) { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
+        .egg-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .egg-icon { font-size: 3rem; display: block; margin-bottom: 5px; }
+        .egg-name { font-family: 'Fredoka One'; font-size: 1.1rem; color: #333; }
+        .egg-time { font-size: 0.9rem; color: #666; font-weight: bold; display: block; margin-top: 5px; }
+
+        .egg-bluey { border-color: #42A5F5; }
+        .egg-familia { border-color: #FF7043; }
+        .egg-amigos { border-color: #66BB6A; }
+        .egg-bebes { border-color: #EC407A; }
+        .egg-mythic { border-color: #FFD700; background: linear-gradient(135deg, #FFF9C4, #FFF176); box-shadow: 0 0 15px #FFD700; }
+
+        /* Modal */
+        #modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 100;
+            justify-content: center; align-items: center; flex-direction: column;
+            color: white;
+        }
+        #modal-overlay.active { display: flex; }
+        .hatching-egg { font-size: 8rem; animation: shake 0.3s infinite; }
+        .timer-text { font-family: 'Fredoka One'; font-size: 5rem; margin: 10px 0; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) rotate(0); }
+            25% { transform: translateX(-10px) rotate(-10deg); }
+            75% { transform: translateX(10px) rotate(10deg); }
+        }
+
+        /* Jardín */
+        .garden-area {
+            position: relative; width: 95%; max-width: 1000px; height: 500px;
+            margin: 20px auto 40px; background: #81C784;
+            border: 8px solid #5D4037; border-radius: 20px;
+            overflow: hidden; /* IMPORTANTE: Esto evita que se salgan */
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.2);
+        }
+        .garden-bg {
+            position: absolute; width: 100%; height: 100%;
+            background-image: radial-gradient(#689F38 15%, transparent 16%), radial-gradient(#689F38 15%, transparent 16%);
+            background-size: 20px 20px; background-position: 0 0, 10px 10px; opacity: 0.3;
+            pointer-events: none; /* Para que no estorbe los clics */
+        }
+
+        /* PERSONAJES */
+        .character {
+            position: absolute;
+            width: 80px; height: 80px; /* Tamaño fijo */
+            cursor: pointer; z-index: 10;
+            transition: left 3s ease-in-out, top 3s ease-in-out;
+            animation: float 1.5s ease-in-out infinite;
+            
+            /* Estilo visual: Círculo blanco y sombra */
+            background: radial-gradient(circle, white 60%, transparent 70%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .character img {
+            width: 70px; /* Imagen un poco más pequeña que el fondo blanco */
+            height: 70px;
+            object-fit: contain;
+            pointer-events: none; /* Para que el clic vaya al contenedor */
+        }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        
+        .character.spawning { animation: spawn 0.5s ease-out; }
+        @keyframes spawn { from { transform: scale(0); } to { transform: scale(1); } }
+
+        .character:hover {
+            transform: scale(1.4); z-index: 20;
+            filter: drop-shadow(0 0 10px gold); animation: none;
+        }
+
+        .character::after {
+            content: attr(data-name); position: absolute; bottom: -25px;
+            left: 50%; transform: translateX(-50%); background: white;
+            padding: 2px 8px; border-radius: 10px; font-family: 'Fredoka One';
+            font-size: 12px; white-space: nowrap; opacity: 0;
+            transition: opacity 0.2s; border: 2px solid #333; color: #333;
+        }
+        .character:hover::after { opacity: 1; }
+
+        /* Ajustes de tamaño por tipo */
+        .char-dad { width: 90px; height: 90px; }
+        .char-dad img { width: 80px; height: 80px; }
+        
+        .char-mom { width: 85px; height: 85px; }
+        .char-mom img { width: 75px; height: 75px; }
+
+        .char-baby { width: 65px; height: 65px; }
+        .char-baby img { width: 55px; height: 55px; }
+
     </style>
 </head>
 <body>
 
-    <h1>Prueba de Imagen 1.png</h1>
-    <p>Si das clic y no sale la imagen, revisa la consola (F12).</p>
-    
-    <button onclick="ponerImagen()">Poner Imagen 1.png</button>
-    
-    <div id="garden"></div>
+    <button id="music-btn" onclick="toggleMusic()">🔇</button>
+
+    <h1>Bluey: Jardín Heeler</h1>
+    <p>¡Haz clic en un huevo para invocar personajes!</p>
+
+    <!-- Huevos -->
+    <div class="egg-container">
+        <button class="egg-btn egg-bluey" onclick="startHatching('bluey')">
+            <span class="egg-icon">🥚</span>
+            <span class="egg-name">Protagonistas</span>
+            <span class="egg-time">⏱ 8s</span>
+        </button>
+        <button class="egg-btn egg-familia" onclick="startHatching('familia')">
+            <span class="egg-icon">🥚</span>
+            <span class="egg-name">Familia</span>
+            <span class="egg-time">⏱ 12s</span>
+        </button>
+        <button class="egg-btn egg-amigos" onclick="startHatching('amigos')">
+            <span class="egg-icon">🥚</span>
+            <span class="egg-name">Amigos</span>
+            <span class="egg-time">⏱ 15s</span>
+        </button>
+        <button class="egg-btn egg-bebes" onclick="startHatching('bebes')">
+            <span class="egg-icon">🥚</span>
+            <span class="egg-name">Bebés</span>
+            <span class="egg-time">⏱ 18s</span>
+        </button>
+        <button class="egg-btn egg-mythic" onclick="startHatching('mythic')">
+            <span class="egg-icon">🥚</span>
+            <span class="egg-name">Especiales</span>
+            <span class="egg-time">⏱ 25s</span>
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal-overlay">
+        <div class="hatching-egg">🥚</div>
+        <div class="timer-text" id="countdown-display">0</div>
+        <p>Incubando...</p>
+    </div>
+
+    <!-- Jardín -->
+    <div class="garden-area">
+        <div class="garden-bg"></div>
+        <div id="garden-container"></div>
+    </div>
 
     <script>
-        function ponerImagen() {
-            const div = document.getElementById('garden');
-            div.innerHTML = ''; // Limpiar
-            
-            const img = document.createElement('img');
-            
-            // RUTA DE PRUEBA
-            img.src = '1.png'; 
-            
-            // Depuración: Esto nos dirá qué pasa
-            img.onload = function() {
-                alert("¡ÉXITO! La imagen cargó correctamente. El problema eran los nombres anteriores.");
-            };
-            img.onerror = function() {
-                alert("ERROR: No se encontró '1.png'. Asegúrate de que el archivo se llame EXACTAMENTE '1.png' (en minúsculas, sin espacios) y esté en la carpeta principal.");
-            };
+        // --- BASE DE DATOS DE IMÁGENES (Nombres reales de tus archivos) ---
+        // Asegúrate de que estos archivos existan en tu repositorio.
+        // 1.png = Bandit (probado anteriormente)
+        
+        const characterDB = {
+            bluey: [
+                { name: 'Bluey', size: 'kid', url: 'bluey-bluey.png' },
+                { name: 'Bingo', size: 'kid', url: 'bluey-bingoesss.png' }
+            ],
+            familia: [
+                { name: 'Bandit', size: 'dad', url: '1.png' }, // Sabemos que este funciona
+                { name: 'Rad', size: 'dad', url: 'bluey-rad.png' },
+                { name: 'Stripe', size: 'dad', url: 'bluey-stripe.png' },
+                { name: 'Trixie', size: 'mom', url: 'bluey-trixie.png' },
+                { name: 'Nana', size: 'mom', url: 'bluey-nana.png' } // Asegúrate de tener este archivo o cámbialo
+            ],
+            amigos: [
+                { name: 'Coco', size: 'kid', url: 'bluey-coco.png' },
+                { name: 'Indy', size: 'kid', url: 'bluey-indy.png' },
+                { name: 'Mackenzie', size: 'kid', url: 'bluey-mackenz.png' },
+                { name: 'Rusty', size: 'kid', url: 'bluey-rusty.png' },
+                { name: 'Snickers', size: 'kid', url: 'bluey-snakers.png' },
+                { name: 'Winton', size: 'kid', url: 'bluey-winton.png' },
+                { name: 'Lucky', size: 'kid', url: 'bluey-lucky.png' }
+            ],
+            bebes: [
+                { name: 'Socks', size: 'baby', url: 'bluey-socks.png' },
+                { name: 'Muffin', size: 'baby', url: 'muffins.png' }
+            ],
+            mythic: [
+                { name: 'Bluey Feliz', size: 'kid', url: 'bluey-bluey-dance.png' }
+            ]
+        };
 
-            img.style.top = "50px";
-            img.style.left = "50px";
+        const waitTimes = { bluey: 8, familia: 12, amigos: 15, bebes: 18, mythic: 25 };
+        let isHatching = false;
+
+        // --- AUDIO ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        let isPlaying = false;
+
+        function toggleMusic() {
+            const btn = document.getElementById('music-btn');
+            if(isPlaying) {
+                isPlaying = false; btn.innerText = '🔇'; btn.classList.remove('playing');
+            } else {
+                if(!audioCtx) audioCtx = new AudioContext();
+                isPlaying = true; btn.innerText = '🔊'; btn.classList.add('playing');
+                playMelody();
+            }
+        }
+
+        function playMelody() {
+            if(!isPlaying || !audioCtx) return;
+            const now = audioCtx.currentTime;
+            const notes = [523, 587, 659, 698, 784, 698, 659, 587]; 
+            notes.forEach((f, i) => {
+                const osc = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                osc.type = 'triangle'; osc.frequency.value = f;
+                g.gain.setValueAtTime(0.1, now + i*0.25);
+                g.gain.linearRampToValueAtTime(0, now + i*0.25 + 0.2);
+                osc.connect(g); g.connect(audioCtx.destination);
+                osc.start(now + i*0.25); osc.stop(now + i*0.25 + 0.25);
+            });
+            setTimeout(playMelody, notes.length * 250 + 500);
+        }
+
+        // --- LÓGICA DE JUEGO ---
+
+        function startHatching(type) {
+            if(isHatching) return;
+            isHatching = true;
             
-            div.appendChild(img);
+            document.querySelectorAll('.egg-btn').forEach(b => b.disabled = true);
+
+            const overlay = document.getElementById('modal-overlay');
+            const timer = document.getElementById('countdown-display');
+            overlay.classList.add('active');
+
+            let t = waitTimes[type];
+            timer.innerText = t;
+
+            const interval = setInterval(() => {
+                t--;
+                timer.innerText = t;
+                if(t <= 0) {
+                    clearInterval(interval);
+                    hatchCharacter(type);
+                }
+            }, 1000);
+        }
+
+        function hatchCharacter(type) {
+            const pool = characterDB[type];
+            const randomChar = pool[Math.floor(Math.random() * pool.length)];
+            
+            document.getElementById('modal-overlay').classList.remove('active');
+            addToGarden(randomChar);
+
+            document.querySelectorAll('.egg-btn').forEach(b => b.disabled = false);
+            isHatching = false;
+        }
+
+        function addToGarden(charData) {
+            const container = document.getElementById('garden-container');
+            
+            // Crear contenedor del personaje
+            const charDiv = document.createElement('div');
+            charDiv.className = 'character spawning';
+            charDiv.setAttribute('data-name', charData.name);
+            
+            // Crear imagen dentro del contenedor
+            const img = document.createElement('img');
+            img.src = charData.url;
+            charDiv.appendChild(img);
+
+            // Aplicar tamaño
+            if(charData.size === 'dad') charDiv.classList.add('char-dad');
+            if(charData.size === 'mom') charDiv.classList.add('char-mom');
+            if(charData.size === 'baby') charDiv.classList.add('char-baby');
+
+            // Calculamos tamaño real para posicionar
+            // Nota: Los tamaños son 80px base, 90px dad, 65px baby
+            let w = 80; let h = 80;
+            if(charData.size === 'dad') { w = 90; h = 90; }
+            if(charData.size === 'mom') { w = 85; h = 85; }
+            if(charData.size === 'baby') { w = 65; h = 65; }
+
+            const rect = container.getBoundingClientRect();
+            // Restamos el tamaño del personaje para que NO se salga
+            const maxX = rect.width - w;
+            const maxY = rect.height - h;
+            
+            const startX = Math.floor(Math.random() * maxX);
+            const startY = Math.floor(Math.random() * maxY);
+
+            charDiv.style.left = startX + 'px';
+            charDiv.style.top = startY + 'px';
+
+            container.appendChild(charDiv);
+
+            setTimeout(() => {
+                charDiv.classList.remove('spawning');
+                moveCharacter(charDiv);
+            }, 500);
+        }
+
+        function moveCharacter(el) {
+            if(!el.parentNode) return;
+
+            const container = document.getElementById('garden-container');
+            const rect = container.getBoundingClientRect();
+            
+            // Detectar tamaño actual
+            const elWidth = el.offsetWidth;
+            const elHeight = el.offsetHeight;
+
+            // Límites estrictos
+            const maxX = rect.width - elWidth;
+            const maxY = rect.height - elHeight;
+
+            const newX = Math.floor(Math.random() * maxX);
+            const newY = Math.floor(Math.random() * maxY);
+
+            // Lógica de giro
+            const currentX = parseFloat(el.style.left);
+            if(newX > currentX) el.style.transform = 'scaleX(1)';
+            else el.style.transform = 'scaleX(-1)';
+
+            el.style.left = newX + 'px';
+            el.style.top = newY + 'px';
+
+            // Repetir movimiento
+            setTimeout(() => moveCharacter(el), 3000 + Math.random()*2000);
         }
     </script>
 </body>
