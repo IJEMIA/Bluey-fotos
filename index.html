@@ -3,56 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bluey: Jardín de los Heeler</title>
-    <link rel="stylesheet" href="Style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600&display=swap" rel="stylesheet">
+    <title>Prueba Bluey</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #81C784; padding: 20px; }
+        button { padding: 20px; font-size: 20px; cursor: pointer; background: #FFD700; border: none; border-radius: 10px; }
+        #garden { position: relative; width: 100%; height: 400px; background: white; margin-top: 20px; border: 2px dashed #333; }
+        img { width: 100px; position: absolute; }
+    </style>
 </head>
 <body>
 
-    <button id="music-btn" onclick="toggleMusic()">🔇</button>
+    <h1>Prueba de Imagen 1.png</h1>
+    <p>Si das clic y no sale la imagen, revisa la consola (F12).</p>
+    
+    <button onclick="ponerImagen()">Poner Imagen 1.png</button>
+    
+    <div id="garden"></div>
 
-    <h1>Bluey: Jardín Heeler</h1>
-    <p>¡Haz clic en un huevo para invocar personajes!</p>
+    <script>
+        function ponerImagen() {
+            const div = document.getElementById('garden');
+            div.innerHTML = ''; // Limpiar
+            
+            const img = document.createElement('img');
+            
+            // RUTA DE PRUEBA
+            img.src = '1.png'; 
+            
+            // Depuración: Esto nos dirá qué pasa
+            img.onload = function() {
+                alert("¡ÉXITO! La imagen cargó correctamente. El problema eran los nombres anteriores.");
+            };
+            img.onerror = function() {
+                alert("ERROR: No se encontró '1.png'. Asegúrate de que el archivo se llame EXACTAMENTE '1.png' (en minúsculas, sin espacios) y esté en la carpeta principal.");
+            };
 
-    <div class="egg-container">
-        <button class="egg-btn egg-bluey" onclick="startHatching('bluey')">
-            <span class="egg-icon">🥚</span>
-            <span class="egg-name">Protagonistas</span>
-            <span class="egg-time">⏱ 8s</span>
-        </button>
-        <button class="egg-btn egg-familia" onclick="startHatching('familia')">
-            <span class="egg-icon">🥚</span>
-            <span class="egg-name">Familia</span>
-            <span class="egg-time">⏱ 12s</span>
-        </button>
-        <button class="egg-btn egg-amigos" onclick="startHatching('amigos')">
-            <span class="egg-icon">🥚</span>
-            <span class="egg-name">Amigos</span>
-            <span class="egg-time">⏱ 15s</span>
-        </button>
-        <button class="egg-btn egg-bebes" onclick="startHatching('bebes')">
-            <span class="egg-icon">🥚</span>
-            <span class="egg-name">Bebés</span>
-            <span class="egg-time">⏱ 18s</span>
-        </button>
-        <button class="egg-btn egg-mythic" onclick="startHatching('mythic')">
-            <span class="egg-icon">🥚</span>
-            <span class="egg-name">Especiales</span>
-            <span class="egg-time">⏱ 25s</span>
-        </button>
-    </div>
-
-    <div id="modal-overlay">
-        <div class="hatching-egg">🥚</div>
-        <div class="timer-text" id="countdown-display">0</div>
-        <p>Incubando...</p>
-    </div>
-
-    <div class="garden-area">
-        <div class="garden-bg"></div>
-        <div id="garden-container"></div>
-    </div>
-
-    <script src="script.js"></script>
+            img.style.top = "50px";
+            img.style.left = "50px";
+            
+            div.appendChild(img);
+        }
+    </script>
 </body>
 </html>
