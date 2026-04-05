@@ -1,1 +1,65 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bluey: Jardín de los Heeler</title>
+    <!-- Enlazamos al archivo CSS externo -->
+    <link rel="stylesheet" href="Style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Botón de Música -->
+    <button id="music-btn" onclick="toggleMusic()">🔇</button>
+
+    <h1>Bluey: Jardín Heeler</h1>
+    <p>¡Haz clic en un huevo para invocar personajes!</p>
+
+    <!-- Selección de Huevos -->
+    <div class="egg-container">
+        <button class="egg-btn egg-bluey" onclick="startHatching('bluey')">
+            <span class="egg-icon">🥚</span>
+            <span class="egg-name">Protagonistas</span>
+            <span class="egg-time">⏱ 8s</span>
+        </button>
+        <button class="egg-btn egg-familia" onclick="startHatching('familia')">
+            <span class="egg-icon">🥚</span>
+            <span class="egg-name">Familia</span>
+            <span class="egg-time">⏱ 12s</span>
+        </button>
+        <button class="egg-btn egg-amigos" onclick="startHatching('amigos')">
+            <span class="egg-icon">🥚</span>
+            <span class="egg-name">Amigos</span>
+            <span class="egg-time">⏱ 15s</span>
+        </button>
+        <button class="egg-btn egg-bebes" onclick="startHatching('bebes')">
+            <span class="egg-icon">🥚</span>
+            <span class="egg-name">Bebés</span>
+            <span class="egg-time">⏱ 18s</span>
+        </button>
+        <button class="egg-btn egg-mythic" onclick="startHatching('mythic')">
+            <span class="egg-icon">🥚</span>
+            <span class="egg-name">Especiales</span>
+            <span class="egg-time">⏱ 25s</span>
+        </button>
+    </div>
+
+    <!-- Pantalla de Carga (Modal) -->
+    <div id="modal-overlay">
+        <div class="hatching-egg">🥚</div>
+        <div class="timer-text" id="countdown-display">0</div>
+        <p>Incubando...</p>
+    </div>
+
+    <!-- Área del Jardín -->
+    <div class="garden-area">
+        <div class="garden-bg"></div>
+        <div id="garden-container"></div>
+    </div>
+
+    <!-- Enlazamos al archivo JavaScript externo -->
+    <script src="script.js"></script>
+</body>
+</html>
