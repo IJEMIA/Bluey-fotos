@@ -1,1 +1,179 @@
 
+:root {
+    --sky-top: #4FC3F7;
+    --sky-bottom: #B3E5FC;
+    --grass: #8BC34A;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, var(--sky-top), var(--sky-bottom) 60%, var(--grass));
+    min-height: 100vh;
+    overflow-x: hidden;
+    user-select: none;
+    text-align: center;
+    color: #333;
+}
+
+h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3rem;
+    color: #fff;
+    text-shadow: 3px 3px 0 #0D47A1;
+    margin: 20px 0 10px;
+}
+
+/* Botón Música */
+#music-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #fff;
+    border: 3px solid #1565C0;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    z-index: 999;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: 0.2s;
+}
+#music-btn:hover { transform: scale(1.1); background: #E3F2FD; }
+#music-btn.playing { background: #BBDEFB; border-color: #FF7043; }
+
+/* Contenedor Huevos */
+.egg-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.egg-btn {
+    background: rgba(255,255,255,0.9);
+    border: 4px solid #888;
+    border-radius: 20px;
+    padding: 15px;
+    width: 140px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.egg-btn:hover:not(:disabled) { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
+.egg-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.egg-icon { font-size: 3rem; display: block; margin-bottom: 5px; }
+.egg-name { font-family: 'Fredoka One'; font-size: 1.1rem; color: #333; }
+.egg-time { font-size: 0.9rem; color: #666; font-weight: bold; display: block; margin-top: 5px; }
+
+/* Categorías */
+.egg-bluey { border-color: #42A5F5; }
+.egg-familia { border-color: #FF7043; }
+.egg-amigos { border-color: #66BB6A; }
+.egg-bebes { border-color: #EC407A; }
+.egg-mythic { border-color: #FFD700; background: linear-gradient(135deg, #FFF9C4, #FFF176); box-shadow: 0 0 15px #FFD700; }
+
+/* Modal */
+#modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+}
+#modal-overlay.active { display: flex; }
+
+.hatching-egg { font-size: 8rem; animation: shake 0.3s infinite; }
+.timer-text { font-family: 'Fredoka One'; font-size: 5rem; margin: 10px 0; }
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0) rotate(0); }
+    25% { transform: translateX(-10px) rotate(-10deg); }
+    75% { transform: translateX(10px) rotate(10deg); }
+}
+
+/* Jardín */
+.garden-area {
+    position: relative;
+    width: 95%;
+    max-width: 1000px;
+    height: 500px;
+    margin: 20px auto 40px;
+    background: #81C784;
+    border: 8px solid #5D4037;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.2);
+}
+
+.garden-bg {
+    position: absolute;
+    width: 100%; height: 100%;
+    background-image: radial-gradient(#689F38 15%, transparent 16%), radial-gradient(#689F38 15%, transparent 16%);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    opacity: 0.3;
+}
+
+/* PERSONAJES */
+.character {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    z-index: 10;
+    transition: left 3s ease-in-out, top 3s ease-in-out;
+    animation: float 1.5s ease-in-out infinite;
+    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.character.spawning {
+    animation: spawn 0.5s ease-out;
+}
+@keyframes spawn { from { transform: scale(0); } to { transform: scale(1); } }
+
+.character:hover {
+    transform: scale(1.4);
+    z-index: 20;
+    filter: drop-shadow(0 0 10px gold);
+    animation: none;
+}
+
+.character::after {
+    content: attr(data-name);
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-family: 'Fredoka One';
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border: 2px solid #333;
+}
+.character:hover::after { opacity: 1; }
+
+/* Tamaños específicos */
+.char-dad { width: 120px; height: 120px; }
+.char-mom { width: 100px; height: 100px; }
+.char-baby { width: 60px; height: 60px; }
